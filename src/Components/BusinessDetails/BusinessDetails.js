@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const BusinessDetails = () => {
   const {
@@ -9,12 +10,48 @@ const BusinessDetails = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
-    if (data.GstNo.length < 15) {
-      toast.error("GST must be 15 characters");
-    } else {
+    const businessName = data.business;
+    const GstNo = data.GstNo;
+    if (GstNo.length < 15) {
+      return toast.error("GST no must be 15 characters");
     }
-    console.log(data);
+    const addressLine1 = data.addressLine1;
+    const addressLine2 = data.addressLine2;
+    const city = data.city;
+    const state = data.state;
+    const country = data.country;
+    const zipCode = data.zipCode;
+
+    const businessInformation = {
+      tab: "businessInformation",
+      businessName,
+      GstNo,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      zipCode,
+      country,
+    };
+    //send data to db
+    fetch(`https://users-bank-info-server.vercel.app/businessDetail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(businessInformation),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          console.log(data);
+          toast.success("Business details added successfully");
+          navigate("/loanDetails");
+        }
+      });
   };
 
   return (

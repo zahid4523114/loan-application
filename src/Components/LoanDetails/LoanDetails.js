@@ -1,6 +1,8 @@
 import { data } from "autoprefixer";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const LoanDetails = () => {
   const {
@@ -11,8 +13,39 @@ const LoanDetails = () => {
 
   const [activeButton, setaActiveButton] = useState(false);
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
-    console.log(data);
+    const applyingAs = data.applying;
+    const loanAmount = data.loanAmount;
+    const interestRate = data.interestRate;
+    const loanTenure = data.loanTenure;
+    const loanReason = data.loanReason;
+
+    const loanInformation = {
+      tab: "loanInformation",
+      applyingAs,
+      loanAmount,
+      interestRate,
+      loanTenure,
+      loanReason,
+    };
+    //send data to db
+    fetch(`https://users-bank-info-server.vercel.app/loanDetail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loanInformation),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          console.log(data);
+          toast.success("Application submitted successfully");
+          navigate("/submittedApplication");
+        }
+      });
   };
 
   return (
@@ -22,25 +55,28 @@ const LoanDetails = () => {
         <hr className="mb-6" />
         <p className="font-bold text-xl mb-2">Applying as</p>
         <input
+          {...register("applying", { required: true })}
           className="mr-2"
-          name="applicant"
+          value="Sole Proprietor"
           id="Sole Proprietor"
           type="radio"
         />
         <label for="Sole Proprietor">Sole Proprietor</label>
         <br />
         <input
+          {...register("applying", { required: true })}
           className="mr-2"
-          name="applicant"
           id="Partnership"
+          value="Partnership"
           type="radio"
         />
         <label for="Partnership">Partnership</label>
         <br />
         <input
+          {...register("applying", { required: true })}
           className="mr-2"
-          name="applicant"
           id="Corporation"
+          value="Corporation"
           type="radio"
         />
         <label for="Corporation">Corporation</label>
@@ -114,13 +150,37 @@ const LoanDetails = () => {
         </div>
         {/* Loan Reason */}
         <p className="font-bold">Loan Reason</p>
-        <input type="checkbox" name="" id="" /> Construction
+        <input
+          type="checkbox"
+          {...register("loanReason", { required: true })}
+          id=""
+          value="Construction"
+        />{" "}
+        Construction
         <br />
-        <input type="checkbox" name="" id="" /> Asset Purchase
+        <input
+          type="checkbox"
+          {...register("loanReason", { required: true })}
+          id=""
+          value="Asset Purchase"
+        />{" "}
+        Asset Purchase
         <br />
-        <input type="checkbox" name="" id="" /> Refinancing
+        <input
+          type="checkbox"
+          {...register("loanReason", { required: true })}
+          id=""
+          value="Refinancing"
+        />{" "}
+        Refinancing
         <br />
-        <input type="checkbox" name="" id="" /> Other
+        <input
+          type="checkbox"
+          {...register("loanReason", { required: true })}
+          id=""
+          value="Other"
+        />{" "}
+        Other
         {/*  */}
         <p className="my-5">
           The information provided in this application shall not be shared to

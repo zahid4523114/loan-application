@@ -6,23 +6,23 @@ const Tab = () => {
     <div className=" w-3/4 mx-auto">
       <div
         style={{ backgroundColor: "#7C56FF" }}
-        className="mx-auto p-4 rounded-t-lg flex justify-between text-white "
+        className="mx-auto p-4 tabs rounded-t-lg flex justify-between text-white "
       >
         <Link
           to="/personalDetails"
-          className="btn btn-ghost rounded-none font-extrabold text-xl"
+          className=" tab tab-lifted text-white hover:text-slate-300 font-extrabold text-xl"
         >
           Personal Details
         </Link>
         <Link
           to="/businessDetails"
-          className="btn btn-ghost rounded-none font-extrabold text-xl  "
+          className="tab tab-lifted text-white hover:text-slate-300 font-extrabold text-xl  "
         >
           Business Details
         </Link>
         <Link
           to="/loanDetails"
-          className="btn btn-ghost rounded-none font-extrabold text-xl"
+          className="tab tab-lifted text-white hover:text-slate-300 font-extrabold text-xl"
         >
           Loan Details
         </Link>

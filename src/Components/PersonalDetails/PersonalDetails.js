@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 const PersonalDetails = () => {
   const {
@@ -9,10 +10,47 @@ const PersonalDetails = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const navigate = useNavigate();
+
+  const onSubmit = (data) => {
+    const firstName = data.firstName;
+    const lastName = data.lastName;
+    const email = data.email;
+    const fax = data.fax;
+    const birthDay = data.birthDay;
+    const age = data.age;
+    const phone = data.phone;
+
+    const personalInformation = {
+      tab: "personalInformation",
+      firstName,
+      lastName,
+      age,
+      birthDay,
+      email,
+      phone,
+      fax,
+    };
+    //send data to db
+    fetch(`https://users-bank-info-server.vercel.app/personalDetail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(personalInformation),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          console.log(data);
+          toast.success("Personal details added successfully");
+          navigate("/businessDetails");
+        }
+      });
+  };
 
   return (
-    <div className="bg-white w-3/4 mx-auto p-8">
+    <div className="bg-white w-3/4 mx-auto  p-8">
       <p className="font-bold text-xl">Personal Information</p>
       <hr className="mb-6" />
       <form onSubmit={handleSubmit(onSubmit)}>
